@@ -1,0 +1,31 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   DigitalHub_Juno
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php 
+$_helper = $this->helper(\Webkul\Marketplace\Helper\Data::class);
+$isPartner = $_helper->isSeller();
+$magentoCurrentUrl = $block->getCurrentUrl();
+?>
+<?php 
+    if ($isPartner) { ?>
+        <li class="nav item <?php echo strpos($magentoCurrentUrl, 'digitalhub_juno/seller/config') !== false ? "current":"";?>">
+       <?php 
+        if (strpos($magentoCurrentUrl,'digitalhub_juno/seller/config') !== false){ ?>      
+            <strong><?= __('Juno') ?></strong>
+            <?php
+        } else{ ?>        
+            <a href="<?= $block->getUrl('digitalhub_juno/seller/config'); ?>">
+                <?= __('Juno') ?>
+            </a>                    
+        <?php 
+            } ?>                  
+        </li> 
+<?php } ?>

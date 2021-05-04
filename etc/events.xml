@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <!-- Credit Card -->
+    <event name="payment_method_assign_data_digitalhub_juno_creditcard">
+        <observer name="digitalhub_juno_creditcard_data_assign" instance="DigitalHub\Juno\Observer\CreditCard\DataAssignObserver" />
+    </event>
+
+    <!-- Save CC Observer handler -->
+    <event name="digitalhub_juno_save_cc_handle">
+        <observer name="digitalhub_juno_save_cc_handle_observer" instance="DigitalHub\Juno\Observer\CreditCard\SaveCcObserver" />
+    </event>
+</config>

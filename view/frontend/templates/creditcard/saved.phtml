@@ -1,0 +1,24 @@
+<?php if ($block->getItems()->getSize()) : ?>
+    <table class="data table">
+        <thead>
+            <tr>
+                <th><?= $block->escapeHtml('Número do cartão mascarado') ?></th>
+                <th><?= $block->escapeHtml('Data de criação') ?></th>
+                <th><?= $block->escapeHtml('Ações') ?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($block->getItems() as $item) : ?>
+                <tr>
+                    <td>xxxx-xxxx-xxxx-<?= $block->escapeHtml($item->getCcLast()) ?></td>
+                    <td><?= $block->escapeHtml($block->formatDate($item->getCreatedAt(), true, true)) ?></td>
+                    <td>
+                        <a href="<?= $block->escapeHtml($block->getUrl('digitalhub_juno/creditcard/remove', ['id' => $item->getId()])) ?>">Remover</a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+<?php else : ?>
+    <div class="message info empty"><span>Você não tem cartões de crédito salvos ainda.</span></div>
+<?php endif; ?>

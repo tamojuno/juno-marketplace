@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd" label="Customer My Account (All Pages)" design_abstraction="custom">
+    <update handle="customer_account"/>
+    <head>
+        <title>Meus cartões de crédito salvos</title>
+    </head>
+    <body>
+        <referenceBlock name="page.main.title">
+            <action method="setPageTitle">
+                <argument translate="true" name="title" xsi:type="string">Meus cartões de crédito salvos</argument>
+            </action>
+        </referenceBlock>
+        <referenceContainer name="content">
+            <block class="DigitalHub\Juno\Block\CreditCard\Saved" name="digitalhub_juno_creditcard_saved" template="DigitalHub_Juno::creditcard/saved.phtml" cacheable="false" />
+        </referenceContainer>
+    </body>
+</page>

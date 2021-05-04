@@ -1,0 +1,17 @@
+<?php if ($block->getOrder()->getPayment()->getMethod() == \DigitalHub\Juno\Model\Ui\Boleto\ConfigProvider::CODE) : ?>
+    <?php $junoData = json_decode($block->getOrder()->getPayment()->getAdditionalInformation('juno_data')); ?>
+    <div class="digitalhub-juno-checkout-success-paymento-info">
+        <h4>Dados para o pagamento do seu pedido</h4>
+        <p>
+            Vencimento: <br>
+            <strong class="duedate"><?= $block->escapeHtml($junoData->_embedded->charges[0]->dueDate) ?></strong>
+        </p>
+        <p>
+            Número do código de barras para pagamento: <br>
+            <strong class="barcode-number"><?= $block->escapeHtml($junoData->_embedded->charges[0]->payNumber) ?></strong>
+        </p>
+        <p>
+            <a class="payment-link" href="<?= $block->escapeHtml($junoData->_embedded->charges[0]->installmentLink) ?>" target="_blank">Clique aqui para abrir o boleto bancário para pagamento</a>
+        </p>
+    </div>
+<?php endif; ?>

@@ -1,0 +1,30 @@
+<?php
+$additionalInformation = $block->getMethod()->getInfoInstance()->getAdditionalInformation();
+$junoData = isset($additionalInformation['juno_data']) ? \Zend\Json\Decoder::decode($additionalInformation['juno_data']) : null;
+?>
+<p><?= $block->escapeHtml($block->getMethod()->getTitle()) ?></p>
+<?php if ($junoData) : ?>
+    <p>
+        <?php if (isset($additionalInformation['cc_last'])) : ?>
+            Número: XXXX-XXXX-XXXX-<?= $block->escapeHtml($additionalInformation['cc_last']) ?><br />
+        <?php endif; ?>
+        Parcelado em: <?= $block->escapeHtml($additionalInformation['installments']) ?>x
+    </p>
+<?php endif; ?>
+
+<table class="admin__table-secondary">
+    <tbody>
+        <tr>
+            <th>Cobrança #<?= $block->escapeHtml($junoData->transactionId) ?></th>
+            <td>Parcela <?= $block->escapeHtml($junoData->installments) ?></td>
+            <?php foreach ($junoData->payments as $payment): ?>
+            <td>Status <?= $block->escapeHtml($payment->status) ?></td>
+            <td>
+                <?php // phpcs:disable ?>
+                <?php echo $block->escapeHtml($this->helper(Magento\Framework\Pricing\Helper\Data::class)->currency($payment->amount, true, false));?>
+                <?php // phpcs:enable ?>
+            </td>
+            <?php endforeach; ?>
+        </tr>
+    </tbody>
+</table>

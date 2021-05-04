@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd" label="Customer My Account (All Pages)" design_abstraction="custom">
+    <update handle="customer_account"/>
+    <head>
+        <title>Juno Payment Configuration</title>
+    </head>
+    <body>
+        <referenceBlock name="page.main.title">
+            <action method="setPageTitle">
+                <argument translate="true" name="title" xsi:type="string">Juno Payment Configuration</argument>
+            </action>
+        </referenceBlock>
+        <referenceContainer name="content">
+            <block class="DigitalHub\Juno\Block\Seller\Info" name="digitalhub_juno_seller_config" template="DigitalHub_Juno::seller/config.phtml" cacheable="false" />
+        </referenceContainer>
+    </body>
+</page>

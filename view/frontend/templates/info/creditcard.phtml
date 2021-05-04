@@ -1,0 +1,11 @@
+<?php
+$additionalInformation = $block->getMethod()->getInfoInstance()->getAdditionalInformation();
+$junoData = \Zend\Json\Decoder::decode($additionalInformation['juno_data']);
+?>
+<p><?= $block->escapeHtml($block->getMethod()->getTitle()) ?></p>
+<p>
+    <?php if (isset($additionalInformation['cc_last'])) : ?>
+        Número: XXXX-XXXX-XXXX-<?= $block->escapeHtml($additionalInformation['cc_last']) ?><br />
+    <?php endif; ?>
+    Parcelar em: <?= $block->escapeHtml($additionalInformation['installments']) ?>x
+</p>

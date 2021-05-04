@@ -1,0 +1,42 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   DigitalHub_Juno
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+
+<form class="form" 
+    action="<?= $block->escapeHtml($block->getUrl('digitalhub_juno/seller/saveconfig')) ?>" 
+    method="post" 
+    id="form-validate" 
+    data-mage-init='{"validation":{}}'
+    autocomplete="off"
+>
+    <div class="wk-mp-page-title page-title">
+        <h2 class="legend"><?= $block->escapeHtml(__('Definir token de recebimento da Juno')) ?></h2>
+        <button type="submit" class="button wk-mp-btn action save primary">
+            <span><span><?= $block->escapeHtml(__('Save')) ?></span></span>
+        </button>
+    </div>
+    <fieldset class="fieldset info">
+        <div class="field">
+            <label class="label"><span><?= $block->escapeHtml("Token Pivado Juno"); ?>:</span></label>
+            <div class="control">
+                <input id="seller_juno_recipient_token" 
+                    class="validate-no-html-tags select" 
+                    type="text" 
+                    name="seller_juno_recipient_token" 
+                    value="<?= $block->escapeHtml($block->getCustomerData()->getSellerJunoRecipientToken()); ?>" 
+                />
+                <label class="note">
+                    <?= __('Seu token privado. Você pode resgatá-lo no painel da sua conta na Juno.') ?>
+                </label>
+            </div>
+        </div>
+    </fieldset>
+</form>

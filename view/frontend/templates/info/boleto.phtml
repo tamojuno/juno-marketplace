@@ -1,0 +1,16 @@
+<?php
+$additionalInformation = $block->getMethod()->getInfoInstance()->getAdditionalInformation();
+$junoData = json_decode($additionalInformation['juno_data']);
+?>
+<p><?= $block->escapeHtml($block->getMethod()->getTitle()) ?></p>
+<p>
+    Vencimento: <br>
+    <strong><?= $block->escapeHtml($junoData->_embedded->charges[0]->dueDate) ?></strong>
+</p>
+<p>
+    Código de barras para pagamento: <br>
+    <strong><?= $block->escapeHtml($junoData->_embedded->charges[0]->billetDetails->barcodeNumber) ?></strong>
+</p>
+<p>
+    <a href="<?= $block->escapeHtml($junoData->_embedded->charges[0]->installmentLink) ?>" target="_blank">Clique aqui para visualizar o boleto bancário</a>
+</p>

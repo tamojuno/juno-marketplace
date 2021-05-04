@@ -1,0 +1,212 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author      Digital Hub Dev Team <contato@digitalhub.com.br>
+ * @copyright   2019 Digital Hub (http://www.digitalhub.com.br)
+ *
+ * @link        http://www.digitalhub.com.br
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="payment">
+            <group id="digitalhub_juno_global" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label><![CDATA[<div class="juno-logo"></div><div class="juno-payment-byline">Juno - Soluções de pagamento Online<br>A solução completa para você emitir cobranças e receber pagamentos, fácil e sem burocracia.</div>]]></label>
+                <fieldset_css>complex juno-payment-section</fieldset_css>
+                <frontend_model>Magento\Paypal\Block\Adminhtml\System\Config\Fieldset\Payment</frontend_model>
+
+                <field id="active" translate="label" type="select" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Ativo</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Habilita ou desabilita todos os meios de pagamento da Juno na sua loja virtual</comment>
+                </field>
+
+                <field id="sandbox" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Modo Sandbox</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Habilitando o modo de sandbox as cobranças realizadas não terão efeito real em sua conta.</comment>
+                </field>
+
+                <!-- V2 param -->
+                <field id="client_id" translate="label" type="password" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Client Id</label>
+                    <comment>Você pode resgatá-lo no painel de sua conta.</comment>
+                </field>
+                <!-- V2 param -->
+                <field id="client_secret" translate="label" type="password" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Client Secret</label>
+                    <comment>Você pode resgatá-lo no painel de sua conta.</comment>
+                </field>
+
+                <field id="sandbox_private_token" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Token privado (sandbox)</label>
+                    <comment>Código do seu Token Privado de integração. Você pode resgatá-lo no painel de sua conta.</comment>
+                    <depends>
+                        <field id="sandbox">1</field>
+                    </depends>
+                </field>
+
+                <field id="production_private_token" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Token private (produção)</label>
+                    <comment>Código do seu Token Privado de integração. Você pode resgatá-lo no painel de sua conta.</comment>
+                    <depends>
+                        <field id="sandbox">0</field>
+                    </depends>
+                </field>
+
+                <field id="sandbox_public_token" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Token público (sandbox)</label>
+                    <comment>Código do seu Token Público de integração. Você pode resgatá-lo no painel de sua conta.</comment>
+                    <depends>
+                        <field id="sandbox">1</field>
+                    </depends>
+                </field>
+
+                <field id="production_public_token" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Token público (produção)</label>
+                    <comment>Código do seu Token Público de integração. Você pode resgatá-lo no painel de sua conta.</comment>
+                    <depends>
+                        <field id="sandbox">0</field>
+                    </depends>
+                </field>
+
+                <field id="debug" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Debug</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Habilitar geração de logs detalhados sobre as operações do módulo</comment>
+                </field>
+
+                <field id="sales_description" translate="label" type="textarea" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Descrição do pagamento</label>
+                    <comment>Descrição sobre o pagamento a ser realizado e visível nos boletos</comment>
+                </field>
+
+                <field id="notify" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Notificar clientes através da Juno</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Habilitar o envio de e-mails de notificação ao seu cliente pela Juno</comment>
+                </field>
+
+                <group id="attributes_mapping" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Configurações de campos do cliente</label>
+
+                    <field id="customer_cpf" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Atributo para CPF - Cliente cadastrado</label>
+                        <source_model>DigitalHub\Juno\Model\Config\Source\CustomerAttributes</source_model>
+                    </field>
+
+                    <field id="customer_cnpj" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Atributo para CNPJ - Cliente cadastrado</label>
+                        <source_model>DigitalHub\Juno\Model\Config\Source\CustomerAttributes</source_model>
+                    </field>
+
+                    <field id="customer_cpf_guest" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Atributo para CPF - Guest checkout</label>
+                        <source_model>DigitalHub\Juno\Model\Config\Source\CustomerAttributesAddress</source_model>
+                    </field>
+
+                    <field id="customer_cnpj_guest" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Atributo para CNPJ - Guest checkout</label>
+                        <source_model>DigitalHub\Juno\Model\Config\Source\CustomerAttributesAddress</source_model>
+                    </field>
+
+                    <field id="customer_telephone" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Atributo para Telefone - Cliente cadastrado</label>
+                        <source_model>DigitalHub\Juno\Model\Config\Source\CustomerAttributes</source_model>
+                    </field>
+
+                    <field id="customer_telephone_guest" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Atributo para Telefone - Guest Checkout</label>
+                        <source_model>DigitalHub\Juno\Model\Config\Source\CustomerAttributesAddress</source_model>
+                    </field>
+
+                    <field id="address_street" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Atributo para Endereço - Logradouro</label>
+                        <source_model>DigitalHub\Juno\Model\Config\Source\CustomerAttributesAddress</source_model>
+                    </field>
+
+                    <field id="address_street_number" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Atributo para Endereço - Número</label>
+                        <source_model>DigitalHub\Juno\Model\Config\Source\CustomerAttributesAddress</source_model>
+                    </field>
+
+                    <field id="address_complement" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Atributo para Endereço - Complemento</label>
+                        <source_model>DigitalHub\Juno\Model\Config\Source\CustomerAttributesAddress</source_model>
+                    </field>
+
+                    <field id="address_neighborhood" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Atributo para Endereço - Bairro</label>
+                        <source_model>DigitalHub\Juno\Model\Config\Source\CustomerAttributesAddress</source_model>
+                    </field>
+                </group>
+
+                <group id="creditcard" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Configurações de cartão de crédito</label>
+
+                    <field id="active" translate="label" type="select" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Ativo</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <comment>Habilita ou desabilita este método de pagamento</comment>
+                    </field>
+
+                    <field id="title" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Título do método</label>
+                        <comment>Título do método de pagamento como será exibido para os clientes</comment>
+                    </field>
+
+                    <field id="max_installments" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Número máximo de parcelas</label>
+                        <comment>Digite um número de 1 à 12</comment>
+                    </field>
+
+                    <field id="min_installment_value" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Valor mínimo por parcela</label>
+                        <comment>Digite apenas números e separador de decimais (formato BRL). Exemplo: 50,00</comment>
+                    </field>
+
+                    <field id="can_save_cc" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Habilitar compra com 1-click?</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <comment>Habilita ou desabilita a opção para seus clientes salvarem os dados do cartão de crédito durante o checkout para uso em compras futuras.</comment>
+                    </field>
+                </group>
+
+                <group id="boleto" translate="label" type="text" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Configurações de boleto bancário</label>
+
+                    <field id="active" translate="label" type="select" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Ativo</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <comment>Habilita ou desabilita este método de pagamento</comment>
+                    </field>
+
+                    <field id="title" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Título do método</label>
+                        <comment>Título do método de pagamento como será exibido para os clientes</comment>
+                    </field>
+
+                    <field id="expiration_days" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Número de dias para o vencimento</label>
+                        <comment>Digite um número inteiro. Exemplo: 2</comment>
+                    </field>
+
+                    <field id="max_overdue_days" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Número máximo de dias que o boleto poderá ser pago após o vencimento</label>
+                        <comment>Digite um número inteiro. Exemplo: 2</comment>
+                    </field>
+
+                    <field id="interest" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Juro mensal para pagamento após o vencimento</label>
+                        <comment>Digite somente números e "," (vírgula) para separador de decimais. Exemplo: 1,99</comment>
+                    </field>
+
+                    <field id="fine" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Multa para pagamento após o vencimento</label>
+                        <comment>Digite somente números e "," (vírgula) para separador de decimais. Exemplo: 1,99</comment>
+                    </field>
+                </group>
+            </group>
+        </section>
+    </system>
+</config>

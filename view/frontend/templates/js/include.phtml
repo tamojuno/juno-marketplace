@@ -1,0 +1,9 @@
+<?php // phpcs:disable
+$isSandbox = $this->helper(\DigitalHub\Juno\Helper\Data::class)->isSandbox();
+// phpcs:enable
+?>
+<?php if ($isSandbox) : ?>
+    <script type="text/javascript" src="https://sandbox.boletobancario.com/boletofacil/wro/direct-checkout.min.js"></script>
+<?php else : ?>
+    <script type="text/javascript" src="https://www.boletobancario.com/boletofacil/wro/direct-checkout.min.js"></script>
+<?php endif; ?>

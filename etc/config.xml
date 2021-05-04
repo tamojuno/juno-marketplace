@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author      Digital Hub Dev Team <contato@digitalhub.com.br>
+ * @copyright   2019 Digital Hub (http://www.digitalhub.com.br)
+ *
+ * @link        http://www.digitalhub.com.br
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <payment>
+            <digitalhub_juno_creditcard>
+                <active>0</active>
+                <model>DigitalHubJunoCreditCardFacade</model>
+                <order_status>pending</order_status>
+                <payment_action>authorize</payment_action>
+                <title>Credit Card</title>
+                <can_authorize>1</can_authorize>
+                <can_capture>1</can_capture>
+                <can_capture_partial>0</can_capture_partial>
+                <can_cancel>0</can_cancel>
+                <can_refund>0</can_refund>
+                <can_refund_partial_per_invoice>0</can_refund_partial_per_invoice>
+                <can_void>0</can_void>
+                <can_use_checkout>1</can_use_checkout>
+                <is_gateway>1</is_gateway>
+                <sort_order>1</sort_order>
+                <group>digitalhub_juno</group>
+            </digitalhub_juno_creditcard>
+            <digitalhub_juno_boleto>
+                <active>0</active>
+                <model>DigitalHubJunoBoletoFacade</model>
+                <order_status>pending</order_status>
+                <payment_action>authorize</payment_action>
+                <title>Boleto Bancário</title>
+                <can_authorize>1</can_authorize>
+                <can_cancel>1</can_cancel>
+                <can_capture>0</can_capture>
+                <can_capture_partial>0</can_capture_partial>
+                <can_refund>0</can_refund>
+                <can_refund_partial_per_invoice>0</can_refund_partial_per_invoice>
+                <can_void>0</can_void>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>1</can_use_internal>
+                <is_gateway>1</is_gateway>
+                <sort_order>1</sort_order>
+                <group>digitalhub_juno</group>
+            </digitalhub_juno_boleto>
+        </payment>
+    </default>
+</config>

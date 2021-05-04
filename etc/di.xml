@@ -1,0 +1,271 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author      Digital Hub Dev Team <contato@digitalhub.com.br>
+ * @copyright   2019 Digital Hub (http://www.digitalhub.com.br)
+ *
+ * @link        http://www.digitalhub.com.br
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <!-- Web API -->
+    <preference for="DigitalHub\Juno\Api\NotificationManagementInterface" type="DigitalHub\Juno\Model\NotificationManagement" />
+
+    <!-- Order initial status -->
+    <type name="Magento\Sales\Model\Order\Payment\State\AuthorizeCommand">
+        <plugin name="digitalhub_juno_plugin_initial_order_status" type="DigitalHub\Juno\Plugin\Sales\Model\Order\Payment\State\AuthorizeCommandPlugin"/>
+    </type>
+
+    <type name="Magento\Checkout\Model\CompositeConfigProvider">
+        <arguments>
+            <argument name="configProviders" xsi:type="array">
+                <item name="digitalhub_juno_global_config" xsi:type="object">DigitalHub\Juno\Model\Ui\ConfigProvider</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="DigitalHub\Juno\Logger\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="DigitalHub\Juno\Logger\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">junoLogger</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="debug" xsi:type="object">DigitalHub\Juno\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Cartão de Crédito -->
+
+    <type name="Magento\Checkout\Model\CompositeConfigProvider">
+        <arguments>
+            <argument name="configProviders" xsi:type="array">
+                <item name="digitalhub_juno_creditcard_config" xsi:type="object">DigitalHub\Juno\Model\Ui\CreditCard\ConfigProvider</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Method Facade -->
+    <virtualType name="DigitalHubJunoCreditCardFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">\DigitalHub\Juno\Model\Ui\CreditCard\ConfigProvider::CODE</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">DigitalHub\Juno\Block\Info\CreditCard</argument>
+            <argument name="valueHandlerPool" xsi:type="object">DigitalHubJunoCreditCardValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">DigitalHubJunoCreditCardValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">DigitalHubJunoCreditCardCommandPool</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Command Pool -->
+    <virtualType name="DigitalHubJunoCreditCardCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="authorize" xsi:type="string">DigitalHubJunoCreditCardAuthorizeCommand</item>
+                <item name="sale" xsi:type="string">DigitalHubJunoCreditCardAuthorizeCommand</item>
+                <item name="capture" xsi:type="string">DigitalHubJunoGatewayCommandCreditCardCaptureStrategyCommand</item>
+                <item name="settlement" xsi:type="string">DigitalHubJunoCreditCardCaptureCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Authorize Command -->
+    <virtualType name="DigitalHubJunoCreditCardAuthorizeCommand" type="DigitalHub\Juno\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">DigitalHubJunoCreditCardAuthorizationRequest</argument>
+            <argument name="transferFactory" xsi:type="object">DigitalHub\Juno\Gateway\Http\TransferFactory</argument>
+            <argument name="client" xsi:type="object">DigitalHub\Juno\Gateway\Http\Client\CreditCard\TransactionAuthorization</argument>
+            <argument name="validator" xsi:type="object">DigitalHub\Juno\Gateway\Validator\CreditCard\AuthorizationValidator</argument>
+            <argument name="handler" xsi:type="object">DigitalHubJunoCreditCardAuthorizationResponseHandler</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Authorize Request Builder Composite -->
+    <virtualType name="DigitalHubJunoCreditCardAuthorizationRequest" type="Magento\Payment\Gateway\Request\BuilderComposite">
+        <arguments>
+            <argument name="builders" xsi:type="array">
+                <item name="order" xsi:type="string">DigitalHub\Juno\Gateway\Request\OrderDataBuilder</item>
+<!--                <item name="customer" xsi:type="string">DigitalHub\Juno\Gateway\Request\CustomerDataBuilder</item>-->
+<!--                <item name="address" xsi:type="string">DigitalHub\Juno\Gateway\Request\AddressDataBuilder</item>-->
+                <item name="payment" xsi:type="string">DigitalHub\Juno\Gateway\Request\CreditCard\PaymentDataBuilder</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Authorize Response Handler Composite -->
+    <virtualType name="DigitalHubJunoCreditCardAuthorizationResponseHandler" type="Magento\Payment\Gateway\Response\HandlerChain">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="authorization" xsi:type="string">DigitalHub\Juno\Gateway\Response\CreditCard\AuthorizationHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Capture Command -->
+    <virtualType name="DigitalHubJunoCreditCardCaptureCommand" type="DigitalHub\Juno\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">DigitalHubJunoCreditCardCaptureRequest</argument>
+            <argument name="transferFactory" xsi:type="object">DigitalHub\Juno\Gateway\Http\TransferFactory</argument>
+            <argument name="client" xsi:type="object">DigitalHub\Juno\Gateway\Http\Client\CreditCard\TransactionCapture</argument>
+            <argument name="validator" xsi:type="object">DigitalHub\Juno\Gateway\Validator\CreditCard\CaptureValidator</argument>
+            <argument name="handler" xsi:type="object">DigitalHubJunoCreditCardCaptureResponseHandler</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Capture Request Builder Composite -->
+    <virtualType name="DigitalHubJunoCreditCardCaptureRequest" type="Magento\Payment\Gateway\Request\BuilderComposite">
+        <arguments>
+            <argument name="builders" xsi:type="array">
+                <item name="capture" xsi:type="string">DigitalHub\Juno\Gateway\Request\CreditCard\CaptureDataBuilder</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Capture Response Handler Composite -->
+    <virtualType name="DigitalHubJunoCreditCardCaptureResponseHandler" type="Magento\Payment\Gateway\Response\HandlerChain">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="capture" xsi:type="string">DigitalHub\Juno\Gateway\Response\CreditCard\CaptureHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Capture Strategy Command definition -->
+    <virtualType name="DigitalHubJunoGatewayCommandCreditCardCaptureStrategyCommand" type="DigitalHub\Juno\Gateway\Command\CreditCard\CaptureStrategyCommand">
+        <arguments>
+            <argument name="commandPool" xsi:type="object">DigitalHubJunoCreditCardCommandPool</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Value Handlers -->
+    <virtualType name="DigitalHubJunoCreditCardValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">DigitalHubJunoCreditCardValueHandler</item>
+                <item name="active" xsi:type="string">DigitalHub\Juno\Gateway\Config\CreditCard\ActiveValueHandler</item>
+                <item name="title" xsi:type="string">DigitalHub\Juno\Gateway\Config\CreditCard\TitleValueHandler</item>
+                <item name="payment_action" xsi:type="string">DigitalHub\Juno\Gateway\Config\CreditCard\PaymentActionValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="DigitalHubJunoCreditCardValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">DigitalHubJunoCreditCardConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Validators Pool -->
+    <virtualType name="DigitalHubJunoCreditCardValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">DigitalHub\Juno\Gateway\Validator\CountryValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Config Interface -->
+    <virtualType name="DigitalHubJunoCreditCardConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">DigitalHub\Juno\Model\Ui\CreditCard\ConfigProvider::CODE</argument>
+        </arguments>
+    </virtualType>
+
+
+    <!-- Boleto Bancário a vista -->
+
+    <type name="Magento\Checkout\Model\CompositeConfigProvider">
+        <arguments>
+            <argument name="configProviders" xsi:type="array">
+                <item name="digitalhub_juno_boleto_config" xsi:type="object">DigitalHub\Juno\Model\Ui\Boleto\ConfigProvider</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Method Facade -->
+    <virtualType name="DigitalHubJunoBoletoFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">\DigitalHub\Juno\Model\Ui\Boleto\ConfigProvider::CODE</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">DigitalHub\Juno\Block\Info\Boleto</argument>
+            <argument name="valueHandlerPool" xsi:type="object">DigitalHubJunoBoletoValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">DigitalHubJunoBoletoValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">DigitalHubJunoBoletoCommandPool</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Command Pool -->
+    <virtualType name="DigitalHubJunoBoletoCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="authorize" xsi:type="string">DigitalHubJunoBoletoAuthorizeCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Authorize Command -->
+    <virtualType name="DigitalHubJunoBoletoAuthorizeCommand" type="DigitalHub\Juno\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">DigitalHubJunoBoletoAuthorizationRequest</argument>
+            <argument name="transferFactory" xsi:type="object">DigitalHub\Juno\Gateway\Http\TransferFactory</argument>
+            <argument name="client" xsi:type="object">DigitalHub\Juno\Gateway\Http\Client\Boleto\TransactionAuthorization</argument>
+            <argument name="validator" xsi:type="object">DigitalHub\Juno\Gateway\Validator\Boleto\AuthorizationValidator</argument>
+            <argument name="handler" xsi:type="object">DigitalHubJunoBoletoAuthorizationResponseHandler</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Authorize Request Builder Composite -->
+    <virtualType name="DigitalHubJunoBoletoAuthorizationRequest" type="Magento\Payment\Gateway\Request\BuilderComposite">
+        <arguments>
+            <argument name="builders" xsi:type="array">
+                <item name="order" xsi:type="string">DigitalHub\Juno\Gateway\Request\OrderDataBuilder</item>
+                <item name="payment" xsi:type="string">DigitalHub\Juno\Gateway\Request\Boleto\PaymentDataBuilder</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Authorize Response Handler Composite -->
+    <virtualType name="DigitalHubJunoBoletoAuthorizationResponseHandler" type="Magento\Payment\Gateway\Response\HandlerChain">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="authorization" xsi:type="string">DigitalHub\Juno\Gateway\Response\Boleto\AuthorizationHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Value Handlers -->
+    <virtualType name="DigitalHubJunoBoletoValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">DigitalHubJunoBoletoValueHandler</item>
+                <item name="active" xsi:type="string">DigitalHub\Juno\Gateway\Config\Boleto\ActiveValueHandler</item>
+                <item name="title" xsi:type="string">DigitalHub\Juno\Gateway\Config\Boleto\TitleValueHandler</item>
+                <item name="payment_action" xsi:type="string">DigitalHub\Juno\Gateway\Config\Boleto\PaymentActionValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="DigitalHubJunoBoletoValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">DigitalHubJunoBoletoConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Validators Pool -->
+    <virtualType name="DigitalHubJunoBoletoValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">DigitalHub\Juno\Gateway\Validator\CountryValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Config Interface -->
+    <virtualType name="DigitalHubJunoBoletoConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">DigitalHub\Juno\Model\Ui\Boleto\ConfigProvider::CODE</argument>
+        </arguments>
+    </virtualType>
+</config>
